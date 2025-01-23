@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/olekukonko/tablewriter"
 
-	migrate "github.com/rubenv/sql-migrate"
+	migrate "github.com/CaseMark/sql-migrate"
 )
 
 type StatusCommand struct{}
@@ -34,8 +35,9 @@ func (*StatusCommand) Synopsis() string {
 }
 
 func (c *StatusCommand) Run(args []string) int {
+
 	cmdFlags := flag.NewFlagSet("status", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	ConfigFlags(cmdFlags)
 
 	if err := cmdFlags.Parse(args); err != nil {
@@ -44,13 +46,13 @@ func (c *StatusCommand) Run(args []string) int {
 
 	env, err := GetEnvironment()
 	if err != nil {
-		ui.Error(fmt.Sprintf("Could not parse config: %s", err))
+		log.Fatal(fmt.Sprintf("Could not parse config: %s", err))
 		return 1
 	}
 
 	db, dialect, err := GetConnection(env)
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 	defer db.Close()
@@ -60,13 +62,13 @@ func (c *StatusCommand) Run(args []string) int {
 	}
 	migrations, err := source.FindMigrations()
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 
 	records, err := migrate.GetMigrationRecords(db, dialect)
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 
@@ -85,7 +87,7 @@ func (c *StatusCommand) Run(args []string) int {
 
 	for _, r := range records {
 		if rows[r.Id] == nil {
-			ui.Warn(fmt.Sprintf("Could not find migration file: %v", r.Id))
+			log.Println(fmt.Sprintf("Could not find migration file: %v", r.Id))
 			continue
 		}
 

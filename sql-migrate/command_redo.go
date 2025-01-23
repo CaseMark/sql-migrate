@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strings"
 
-	migrate "github.com/rubenv/sql-migrate"
+	migrate "github.com/CaseMark/sql-migrate"
 )
 
 type RedoCommand struct{}
@@ -34,7 +35,7 @@ func (c *RedoCommand) Run(args []string) int {
 	var dryrun bool
 
 	cmdFlags := flag.NewFlagSet("redo", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	cmdFlags.BoolVar(&dryrun, "dryrun", false, "Don't apply migrations, just print them.")
 	ConfigFlags(cmdFlags)
 
@@ -44,13 +45,13 @@ func (c *RedoCommand) Run(args []string) int {
 
 	env, err := GetEnvironment()
 	if err != nil {
-		ui.Error(fmt.Sprintf("Could not parse config: %s", err))
+		log.Fatal(fmt.Sprintf("Could not parse config: %s", err))
 		return 1
 	}
 
 	db, dialect, err := GetConnection(env)
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 	defer db.Close()
@@ -61,10 +62,10 @@ func (c *RedoCommand) Run(args []string) int {
 
 	migrations, _, err := migrate.PlanMigration(db, dialect, source, migrate.Down, 1)
 	if err != nil {
-		ui.Error(fmt.Sprintf("Migration (redo) failed: %v", err))
+		log.Fatal(fmt.Sprintf("Migration (redo) failed: %v", err))
 		return 1
 	} else if len(migrations) == 0 {
-		ui.Output("Nothing to do!")
+		log.Println("Nothing to do!")
 		return 0
 	}
 
@@ -74,17 +75,17 @@ func (c *RedoCommand) Run(args []string) int {
 	} else {
 		_, err := migrate.ExecMax(db, dialect, source, migrate.Down, 1)
 		if err != nil {
-			ui.Error(fmt.Sprintf("Migration (down) failed: %s", err))
+			log.Fatal(fmt.Sprintf("Migration (down) failed: %s", err))
 			return 1
 		}
 
 		_, err = migrate.ExecMax(db, dialect, source, migrate.Up, 1)
 		if err != nil {
-			ui.Error(fmt.Sprintf("Migration (up) failed: %s", err))
+			log.Fatal(fmt.Sprintf("Migration (up) failed: %s", err))
 			return 1
 		}
 
-		ui.Output(fmt.Sprintf("Reapplied migration %s.", migrations[0].Id))
+		log.Println(fmt.Sprintf("Reapplied migration %s.", migrations[0].Id))
 	}
 
 	return 0

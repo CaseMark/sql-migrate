@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 
-	migrate "github.com/rubenv/sql-migrate"
+	migrate "github.com/CaseMark/sql-migrate"
 )
 
 func ApplyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int, version int64) error {
@@ -52,9 +53,9 @@ func ApplyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int, ver
 		}
 
 		if n == 1 {
-			ui.Output("Applied 1 migration")
+			log.Println("Applied 1 migration")
 		} else {
-			ui.Output(fmt.Sprintf("Applied %d migrations", n))
+			log.Println(fmt.Sprintf("Applied %d migrations", n))
 		}
 	}
 
@@ -63,14 +64,14 @@ func ApplyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int, ver
 
 func PrintMigration(m *migrate.PlannedMigration, dir migrate.MigrationDirection) {
 	if dir == migrate.Up {
-		ui.Output(fmt.Sprintf("==> Would apply migration %s (up)", m.Id))
+		log.Println(fmt.Sprintf("==> Would apply migration %s (up)", m.Id))
 		for _, q := range m.Up {
-			ui.Output(q)
+			log.Println(q)
 		}
 	} else if dir == migrate.Down {
-		ui.Output(fmt.Sprintf("==> Would apply migration %s (down)", m.Id))
+		log.Println(fmt.Sprintf("==> Would apply migration %s (down)", m.Id))
 		for _, q := range m.Down {
-			ui.Output(q)
+			log.Println(q)
 		}
 	} else {
 		panic("Not reached")

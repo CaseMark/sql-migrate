@@ -10,8 +10,8 @@
 package main
 
 import (
+	migrate "github.com/CaseMark/sql-migrate"
 	_ "github.com/godror/godror"
-	migrate "github.com/rubenv/sql-migrate"
 )
 
 func init() {

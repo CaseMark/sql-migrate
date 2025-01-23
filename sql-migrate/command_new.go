@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -41,12 +42,12 @@ func (*NewCommand) Synopsis() string {
 
 func (c *NewCommand) Run(args []string) int {
 	cmdFlags := flag.NewFlagSet("new", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	ConfigFlags(cmdFlags)
 
 	if len(args) < 1 {
 		err := errors.New("A name for the migration is needed")
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 
@@ -55,7 +56,7 @@ func (c *NewCommand) Run(args []string) int {
 	}
 
 	if err := CreateMigration(cmdFlags.Arg(0)); err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 	return 0
@@ -83,6 +84,6 @@ func CreateMigration(name string) error {
 		return err
 	}
 
-	ui.Output(fmt.Sprintf("Created migration %s", pathName))
+	log.Println(fmt.Sprintf("Created migration %s", pathName))
 	return nil
 }
