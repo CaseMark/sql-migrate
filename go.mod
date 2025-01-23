@@ -1,4 +1,4 @@
-module github.com/CaseMark/sql-migrate
+module github.com/rubenv/sql-migrate
 
 go 1.22.4
 

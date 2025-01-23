@@ -10,7 +10,7 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 
-	migrate "github.com/CaseMark/sql-migrate"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 type StatusCommand struct{}

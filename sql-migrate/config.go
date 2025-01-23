@@ -11,7 +11,7 @@ import (
 	"github.com/go-gorp/gorp/v3"
 	"gopkg.in/yaml.v2"
 
-	migrate "github.com/CaseMark/sql-migrate"
+	migrate "github.com/rubenv/sql-migrate"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"

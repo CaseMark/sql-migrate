@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	migrate "github.com/CaseMark/sql-migrate"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 func ApplyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int, version int64) error {
