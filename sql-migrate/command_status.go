@@ -35,7 +35,6 @@ func (*StatusCommand) Synopsis() string {
 }
 
 func (c *StatusCommand) Run(args []string) int {
-
 	cmdFlags := flag.NewFlagSet("status", flag.ContinueOnError)
 	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	ConfigFlags(cmdFlags)
@@ -62,13 +61,13 @@ func (c *StatusCommand) Run(args []string) int {
 	}
 	migrations, err := source.FindMigrations()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Print(err.Error())
 		return 1
 	}
 
 	records, err := migrate.GetMigrationRecords(db, dialect)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Print(err.Error())
 		return 1
 	}
 
