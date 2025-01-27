@@ -12,7 +12,6 @@ func main() {
 }
 
 func realMain() int {
-
 	flags := []cli.Flag{
 		&cli.StringFlag{
 			Name:  "config",
@@ -32,7 +31,7 @@ func realMain() int {
 				Name:        "up",
 				Usage:       (&UpCommand{}).Help(),
 				Description: (&UpCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&UpCommand{}).Run(os.Args[2:])
 					return nil
 				},
@@ -42,7 +41,7 @@ func realMain() int {
 				Name:        "down",
 				Usage:       (&DownCommand{}).Help(),
 				Description: (&DownCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&DownCommand{}).Run(os.Args[2:])
 					return nil
 				},
@@ -52,7 +51,7 @@ func realMain() int {
 				Name:        "redo",
 				Usage:       (&RedoCommand{}).Help(),
 				Description: (&RedoCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&RedoCommand{}).Run(os.Args[2:])
 					return nil
 				},
@@ -62,7 +61,7 @@ func realMain() int {
 				Name:        "status",
 				Usage:       (&StatusCommand{}).Help(),
 				Description: (&StatusCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&StatusCommand{}).Run(os.Args[2:])
 					return nil
 				},
@@ -72,7 +71,7 @@ func realMain() int {
 				Name:        "new",
 				Usage:       (&NewCommand{}).Help(),
 				Description: (&NewCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&NewCommand{}).Run(os.Args[2:])
 					return nil
 				},
@@ -82,7 +81,7 @@ func realMain() int {
 				Name:        "skip",
 				Usage:       (&SkipCommand{}).Help(),
 				Description: (&SkipCommand{}).Synopsis(),
-				Action: func(cCtx *cli.Context) error {
+				Action: func(_ *cli.Context) error {
 					(&SkipCommand{}).Run(os.Args[2:])
 					return nil
 				},

@@ -62,7 +62,7 @@ func (c *RedoCommand) Run(args []string) int {
 
 	migrations, _, err := migrate.PlanMigration(db, dialect, source, migrate.Down, 1)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Migration (redo) failed: %v", err))
+		log.Printf("Migration (redo) failed: %v", err)
 		return 1
 	} else if len(migrations) == 0 {
 		log.Println("Nothing to do!")
@@ -75,17 +75,17 @@ func (c *RedoCommand) Run(args []string) int {
 	} else {
 		_, err := migrate.ExecMax(db, dialect, source, migrate.Down, 1)
 		if err != nil {
-			log.Fatal(fmt.Sprintf("Migration (down) failed: %s", err))
+			log.Printf("Migration (down) failed: %s", err)
 			return 1
 		}
 
 		_, err = migrate.ExecMax(db, dialect, source, migrate.Up, 1)
 		if err != nil {
-			log.Fatal(fmt.Sprintf("Migration (up) failed: %s", err))
+			log.Printf("Migration (up) failed: %s", err)
 			return 1
 		}
 
-		log.Println(fmt.Sprintf("Reapplied migration %s.", migrations[0].Id))
+		log.Printf("Reapplied migration %s.", migrations[0].Id)
 	}
 
 	return 0
