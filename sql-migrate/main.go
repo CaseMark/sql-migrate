@@ -1,54 +1,100 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/mitchellh/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
 	os.Exit(realMain())
 }
 
-var ui cli.Ui
-
 func realMain() int {
-	ui = &cli.BasicUi{Writer: os.Stdout, ErrorWriter: os.Stderr}
 
-	cli := &cli.CLI{
-		Args: os.Args[1:],
-		Commands: map[string]cli.CommandFactory{
-			"up": func() (cli.Command, error) {
-				return &UpCommand{}, nil
+	flags := []cli.Flag{
+		&cli.StringFlag{
+			Name:  "config",
+			Usage: "Configuration file to use",
+		},
+		&cli.StringFlag{
+			Name:  "env",
+			Usage: "Environment to use",
+		},
+	}
+	app := &cli.App{
+		Writer:    os.Stdout,
+		ErrWriter: os.Stderr,
+		Version:   GetVersion(),
+		Commands: []*cli.Command{
+			{
+				Name:        "up",
+				Usage:       (&UpCommand{}).Help(),
+				Description: (&UpCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&UpCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
-			"down": func() (cli.Command, error) {
-				return &DownCommand{}, nil
+			{
+				Name:        "down",
+				Usage:       (&DownCommand{}).Help(),
+				Description: (&DownCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&DownCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
-			"redo": func() (cli.Command, error) {
-				return &RedoCommand{}, nil
+			{
+				Name:        "redo",
+				Usage:       (&RedoCommand{}).Help(),
+				Description: (&RedoCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&RedoCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
-			"status": func() (cli.Command, error) {
-				return &StatusCommand{}, nil
+			{
+				Name:        "status",
+				Usage:       (&StatusCommand{}).Help(),
+				Description: (&StatusCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&StatusCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
-			"new": func() (cli.Command, error) {
-				return &NewCommand{}, nil
+			{
+				Name:        "new",
+				Usage:       (&NewCommand{}).Help(),
+				Description: (&NewCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&NewCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
-			"skip": func() (cli.Command, error) {
-				return &SkipCommand{}, nil
+			{
+				Name:        "skip",
+				Usage:       (&SkipCommand{}).Help(),
+				Description: (&SkipCommand{}).Synopsis(),
+				Action: func(cCtx *cli.Context) error {
+					(&SkipCommand{}).Run(os.Args[2:])
+					return nil
+				},
+				Flags: flags,
 			},
 		},
-		HelpFunc:    cli.BasicHelpFunc("sql-migrate"),
-		HelpWriter:  os.Stdout,
-		ErrorWriter: os.Stderr,
-		Version:     GetVersion(),
 	}
 
-	exitCode, err := cli.Run()
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Error executing CLI: %s\n", err.Error())
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
 		return 1
 	}
 
-	return exitCode
+	return 0
 }

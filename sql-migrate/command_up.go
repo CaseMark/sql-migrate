@@ -37,7 +37,6 @@ func (c *UpCommand) Run(args []string) int {
 	var dryrun bool
 
 	cmdFlags := flag.NewFlagSet("up", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
 	cmdFlags.IntVar(&limit, "limit", 0, "Max number of migrations to apply.")
 	cmdFlags.Int64Var(&version, "version", -1, "Migrate up to a specific version.")
 	cmdFlags.BoolVar(&dryrun, "dryrun", false, "Don't apply migrations, just print them.")
@@ -49,7 +48,6 @@ func (c *UpCommand) Run(args []string) int {
 
 	err := ApplyMigrations(migrate.Up, dryrun, limit, version)
 	if err != nil {
-		ui.Error(err.Error())
 		return 1
 	}
 

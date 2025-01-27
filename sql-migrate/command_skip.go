@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strings"
 
 	migrate "github.com/rubenv/sql-migrate"
@@ -34,7 +35,7 @@ func (c *SkipCommand) Run(args []string) int {
 	var limit int
 
 	cmdFlags := flag.NewFlagSet("up", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	cmdFlags.IntVar(&limit, "limit", 0, "Max number of migrations to skip.")
 	ConfigFlags(cmdFlags)
 
@@ -44,7 +45,7 @@ func (c *SkipCommand) Run(args []string) int {
 
 	err := SkipMigrations(migrate.Up, limit)
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 
@@ -74,11 +75,11 @@ func SkipMigrations(dir migrate.MigrationDirection, limit int) error {
 
 	switch n {
 	case 0:
-		ui.Output("All migrations have already been applied")
+		log.Println("All migrations have already been applied")
 	case 1:
-		ui.Output("Skipped 1 migration")
+		log.Println("Skipped 1 migration")
 	default:
-		ui.Output(fmt.Sprintf("Skipped %d migrations", n))
+		log.Println(fmt.Sprintf("Skipped %d migrations", n))
 	}
 
 	return nil

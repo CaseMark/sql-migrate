@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"strings"
 
 	migrate "github.com/rubenv/sql-migrate"
@@ -37,7 +38,7 @@ func (c *DownCommand) Run(args []string) int {
 	var dryrun bool
 
 	cmdFlags := flag.NewFlagSet("down", flag.ContinueOnError)
-	cmdFlags.Usage = func() { ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { log.Println(c.Help()) }
 	cmdFlags.IntVar(&limit, "limit", 1, "Max number of migrations to apply.")
 	cmdFlags.Int64Var(&version, "version", -1, "Migrate down to a specific version.")
 	cmdFlags.BoolVar(&dryrun, "dryrun", false, "Don't apply migrations, just print them.")
@@ -49,7 +50,7 @@ func (c *DownCommand) Run(args []string) int {
 
 	err := ApplyMigrations(migrate.Down, dryrun, limit, version)
 	if err != nil {
-		ui.Error(err.Error())
+		log.Fatal(err.Error())
 		return 1
 	}
 
