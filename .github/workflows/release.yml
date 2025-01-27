@@ -8,6 +8,11 @@ jobs:
   releases-matrix:
     name: Release Go Binary
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      deployments: write
+      packages: write
     strategy:
       matrix:
         goos: [linux, windows, darwin]
